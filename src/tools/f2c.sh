@@ -34,8 +34,8 @@
 #  This script F2C's LAPACK source files. It is based on PETSc script
 #  bin/maint/toclapack.sh.
 #
-#  Usage: f2clapack.sh < lapack_file.f
-#  E.g.: f2clapack.sh < zhegv.f > zhegv.c
+#  Usage: f2c.sh < lapack_file.f
+#  E.g.: f2c.sh < zhegv.f > zhegv.c
 #
 #  This script needs the following tools:
 #	*) f2c
