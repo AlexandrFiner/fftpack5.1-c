@@ -1,0 +1,7 @@
+#!/bin/sh -
+
+tools_dir=$(dirname "$0")
+for file do
+   base=`echo $file | sed -e 's/\.f//g'`
+    ${tools_dir}/f2c.sh < ${base}.f > ${base}.c
+done
