@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-#define lensav(n) (2*n + int(log2(n)) + 6)
+#define lensav(n) (2*n + (int)(log2(n)) + 6)
 
 int main(int argc, char* argv[]) {
 
