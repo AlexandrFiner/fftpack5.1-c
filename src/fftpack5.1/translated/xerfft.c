@@ -416,104 +416,24 @@ static integer c__1 = 1;
 /*     *                                                               * */
 /*     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/* Subroutine */ int xerfft_(char *srname, integer *info)
+int xerfft_(char *srname, int *info)
 {
-    /* System generated locals */
-    cilist ci__1;
+    char msg[1000];
+    if (*info >= 1)
+        sprintf(msg, "On entry to %s parameter number %d has an illegal value", srname, *info);
+    else if (*info == -1)
+        sprintf(msg, "On entry to %s parameters LOT, JUMP, N and INC are inconsistent", srname);
+    else if (*info == -2)
+        sprintf(msg, "On entry to %s parameter L is greater than LDIM", srname);
+    else if (*info == -3)
+        sprintf(msg, "On entry to %s parameter M is greater than MDIM", srname);
+    else if (*info == -5)
+        sprintf(msg, "Within %s input error returned by lower level routine", srname);
+    else if (*info == -6)
+        sprintf(msg, "On entry to %s parameter LDIM is less than 2*(L/2+1)", srname);
 
-
-
-
-/*  Purpose */
-/*  ======= */
-
-/*  XERFFT  is an error handler for library FFTPACK version 5.1 routines. */
-/*  It is called by an FFTPACK 5.1 routine if an input parameter has an */
-/*  invalid value.  A message is printed and execution stops. */
-
-/*  Installers may consider modifying the STOP statement in order to */
-/*  call system-specific exception-handling facilities. */
-
-/*  Arguments */
-/*  ========= */
-
-/*  SRNAME  (input) CHARACTER*6 */
-/*          The name of the routine which called XERFFT. */
-
-/*  INFO    (input) INTEGER */
-/*          When a single  invalid parameter in the parameter list of */
-/*          the calling routine has been detected, INFO is the position */
-/*          of that parameter.  In the case when an illegal combination */
-/*          of LOT, JUMP, N, and INC has been detected, the calling */
-/*          subprogram calls XERFFT with INFO = -1. */
-
-/* ===================================================================== */
-
-
-    if (*info >= 1) {
-	ci__1.cierr = 0;
-	ci__1.ciunit = 6;
-	ci__1.cifmt = "(A,A,A,I3,A)";
-	s_wsfe(&ci__1);
-	do_fio(&c__1, " ** On entry to ", (ftnlen)16);
-	do_fio(&c__1, srname, (ftnlen)6);
-	do_fio(&c__1, " parameter number ", (ftnlen)18);
-	do_fio(&c__1, (char *)&(*info), (ftnlen)sizeof(integer));
-	do_fio(&c__1, " had an illegal value", (ftnlen)21);
-	e_wsfe();
-    } else if (*info == -1) {
-	ci__1.cierr = 0;
-	ci__1.ciunit = 6;
-	ci__1.cifmt = "(A,A,A,A)";
-	s_wsfe(&ci__1);
-	do_fio(&c__1, " ** On entry to ", (ftnlen)16);
-	do_fio(&c__1, srname, (ftnlen)6);
-	do_fio(&c__1, " parameters LOT, JUMP, N and INC are inconsistent", (
-		ftnlen)49);
-	e_wsfe();
-    } else if (*info == -2) {
-	ci__1.cierr = 0;
-	ci__1.ciunit = 6;
-	ci__1.cifmt = "(A,A,A,A)";
-	s_wsfe(&ci__1);
-	do_fio(&c__1, " ** On entry to ", (ftnlen)16);
-	do_fio(&c__1, srname, (ftnlen)6);
-	do_fio(&c__1, " parameter L is greater than LDIM", (ftnlen)33);
-	e_wsfe();
-    } else if (*info == -3) {
-	ci__1.cierr = 0;
-	ci__1.ciunit = 6;
-	ci__1.cifmt = "(A,A,A,A)";
-	s_wsfe(&ci__1);
-	do_fio(&c__1, " ** On entry to ", (ftnlen)16);
-	do_fio(&c__1, srname, (ftnlen)6);
-	do_fio(&c__1, " parameter M is greater than MDIM", (ftnlen)33);
-	e_wsfe();
-    } else if (*info == -5) {
-	ci__1.cierr = 0;
-	ci__1.ciunit = 6;
-	ci__1.cifmt = "(A,A,A,A)";
-	s_wsfe(&ci__1);
-	do_fio(&c__1, " ** Within ", (ftnlen)11);
-	do_fio(&c__1, srname, (ftnlen)6);
-	do_fio(&c__1, " input error returned by lower level routine", (ftnlen)
-		44);
-	e_wsfe();
-    } else if (*info == -6) {
-	ci__1.cierr = 0;
-	ci__1.ciunit = 6;
-	ci__1.cifmt = "(A,A,A,A)";
-	s_wsfe(&ci__1);
-	do_fio(&c__1, " ** On entry to ", (ftnlen)16);
-	do_fio(&c__1, srname, (ftnlen)6);
-	do_fio(&c__1, " parameter LDIM is less than 2*(L/2+1)", (ftnlen)38);
-	e_wsfe();
-    }
-
-    s_stop("", (ftnlen)0);
-
-/*     End of XERFFT */
+    printf("%s\n", msg);
 
     return 0;
-} /* xerfft_ */
+}
 

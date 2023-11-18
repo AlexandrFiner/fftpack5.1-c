@@ -8,3 +8,7 @@ https://box.icmm.ru/index.php/s/4vhnShGHH9WkLkg
 
 
 gcc main.c -o test -lfftpack -L libs -I include -v
+
+ranlib libs/libfftpack.a
+
+gcc main.c -o test -lm -lfftpack -L libs -I include/
