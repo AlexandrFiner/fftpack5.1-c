@@ -7,3 +7,4 @@ https://box.icmm.ru/index.php/s/4vhnShGHH9WkLkg
 
 
 
+gcc main.c -o test -lfftpack -L libs -I include -v
