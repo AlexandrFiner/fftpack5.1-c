@@ -1,5 +1,3 @@
-extern "C" {
-
 int cfft1i_(const int& n, double* wsave, const int& lensav, int& ier);
 int cfft1f_(const int& n, const int& inc, std::complex<double>* c, const int& lenc, double* wsave, const int& lensav, double* work, const int& lenwrk, int& ier);
 int cfft1b_(const int& n, const int& inc, std::complex<double>* c, const int& lenc, double* wsave, const int& lensav, double* work, const int& lenwrk, int& ier);
@@ -60,5 +58,3 @@ int sinq1b_(const int& n, const int& inc, double* x, const int& lenx, double* ws
 int sinqmi_(const int& n, double* wsave, const int& lensav, int& ier);
 int sinqmf_(const int& lot, const int& jump, const int& n, const int& inc, double* x, const int& lenx, double* wsave, const int& lensav, double* work, const int& lenwrk, int& ier);
 int sinqmb_(const int& lot, const int& jump, const int& n, const int& inc, double* x, const int& lenx, double* wsave, const int& lensav, double* work, const int& lenwrk, int& ier);
-
-} // extern "C"
