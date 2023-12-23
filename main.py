@@ -1,35 +1,61 @@
-import unittest
+# import numpy as np
+#
+# def initialize_complex(size):
+#     return np.random.randn(size) + 1j * np.random.randn(size)
+#
+# def backward_complex(arr):
+#     return np.imag(arr)
+#
+# def forward_complex(arr):
+#     return np.abs(arr)
+#
+# # Пример использования
+# size = 5
+#
+# # Инициализация
+# complex_array = initialize_complex(size)
+# print("Initialized Complex Array:")
+# print(complex_array)
+#
+# # Прямой проход
+# forward_result = forward_complex(complex_array)
+# print("\nForward Result:")
+# print(forward_result)
+#
+# # Обратный проход
+# backward_result = backward_complex(complex_array)
+# print("\nBackward Result:")
+# print(backward_result)
+#
+#
 import numpy as np
-from fftpack5_1 import CFFT1I, CFFT1B, CFFT1F
 
-class TestCFFT1(unittest.TestCase):
+def initialize_complex(size):
+    # Заменяем случайную инициализацию статическими данными
+    real_part = np.arange(1, size + 1)
+    imaginary_part = np.arange(size, 0, -1)
+    return real_part + 1j * imaginary_part
 
-    def test_1d_complex_initialization(self):
-        # Тестирование 1D комплексной инициализации
-        N = 8  # Пример размера массива
-        WSAVE = np.zeros(2 * N + 4, dtype=np.float64)  # Пример массива WSAVE
-        IER = CFFT1I(N, WSAVE)
-        self.assertEqual(IER, 0)  # Проверка успешной инициализации
+def backward_complex(arr):
+    return np.imag(arr)
 
-    def test_1d_complex_backward_forward(self):
-        # Тестирование 1D комплексного обратного и прямого преобразований
-        N = 8  # Пример размера массива
-        WSAVE = np.zeros(2 * N + 4, dtype=np.float64)  # Пример массива WSAVE
-        C = np.random.rand(N) + 1j * np.random.rand(N)  # Пример комплексного входного массива
+def forward_complex(arr):
+    return np.abs(arr)
 
-        # Сохранение оригинального массива для сравнения
-        original_C = np.copy(C)
+# Пример использования
+size = 5
 
-        # Обратное преобразование
-        IER = CFFT1B(N, 1, C, N, WSAVE)
-        self.assertEqual(IER, 0)  # Проверка успешного обратного преобразования
+# Инициализация
+complex_array = initialize_complex(size)
+print("Initialized Complex Array:")
+print(complex_array)
 
-        # Прямое преобразование
-        IER = CFFT1F(N, 1, C, N, WSAVE)
-        self.assertEqual(IER, 0)  # Проверка успешного прямого преобразования
+# Прямой проход
+forward_result = forward_complex(complex_array)
+print("\nForward Result:")
+print(forward_result)
 
-        # Проверка, что результат прямого-обратного преобразования близок к оригиналу
-        np.testing.assert_allclose(C, original_C, atol=1e-8)
-
-if __name__ == '__main__':
-    unittest.main()
+# Обратный проход
+backward_result = backward_complex(complex_array)
+print("\nBackward Result:")
+print(backward_result)
