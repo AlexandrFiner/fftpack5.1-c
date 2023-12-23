@@ -1,30 +1,35 @@
+import unittest
 import numpy as np
-from numpy.fft import fft
+from fftpack5_1 import CFFT1I, CFFT1B, CFFT1F
 
+class TestCFFT1(unittest.TestCase):
 
-def generate_test_data(size):
-    # Генерируем случайные данные для теста
-    data = np.random.random(size)
-    return data
+    def test_1d_complex_initialization(self):
+        # Тестирование 1D комплексной инициализации
+        N = 8  # Пример размера массива
+        WSAVE = np.zeros(2 * N + 4, dtype=np.float64)  # Пример массива WSAVE
+        IER = CFFT1I(N, WSAVE)
+        self.assertEqual(IER, 0)  # Проверка успешной инициализации
 
+    def test_1d_complex_backward_forward(self):
+        # Тестирование 1D комплексного обратного и прямого преобразований
+        N = 8  # Пример размера массива
+        WSAVE = np.zeros(2 * N + 4, dtype=np.float64)  # Пример массива WSAVE
+        C = np.random.rand(N) + 1j * np.random.rand(N)  # Пример комплексного входного массива
 
-def perform_fft(data):
-    result = fft(data)
-    return result
+        # Сохранение оригинального массива для сравнения
+        original_C = np.copy(C)
 
+        # Обратное преобразование
+        IER = CFFT1B(N, 1, C, N, WSAVE)
+        self.assertEqual(IER, 0)  # Проверка успешного обратного преобразования
 
-def main():
-    # Генерируем тестовые данные и выполняем fft
-    data_size = 1024
-    test_data = generate_test_data(data_size)
+        # Прямое преобразование
+        IER = CFFT1F(N, 1, C, N, WSAVE)
+        self.assertEqual(IER, 0)  # Проверка успешного прямого преобразования
 
-    fft_result = perform_fft(test_data)
+        # Проверка, что результат прямого-обратного преобразования близок к оригиналу
+        np.testing.assert_allclose(C, original_C, atol=1e-8)
 
-    print("Исходные данные:")
-    print(test_data)
-    print("\nРезультат FFT:")
-    print(fft_result)
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    unittest.main()
