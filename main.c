@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 	cfft1b_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
     fprintf(file, "BACKWARD WORK = [");
 	for(int i = 0; i < LENWRK; i++) {
-		fprintf(file, "%f ", WORK[i]);
+		fprintf(file, "%f, ", WORK[i]);
 	}
 	fprintf(file, "]\n");
 
@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
 	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
     fprintf(file, "FORWARD WORK = [");
 	for(int i = 0; i < LENWRK; i++) {
-		fprintf(file, "%f ", WORK[i]);
+		fprintf(file, "%f, ", WORK[i]);
 	}
 	fprintf(file, "]\n");
 
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
     fprintf(file, "IDENTIFY TEST AND INITIALIZE FFT\n");
     fprintf(file, "WSAVE = [");
 	for(int i = 0; i < LENSAV; i++) {
-		fprintf(file, "%f ", WSAVE[i]);
+		fprintf(file, "%f, ", WSAVE[i]);
 	}
 	fprintf(file, "]\n");
 
@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
 	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
     fprintf(file, "FORWARD WORK = [");
 	for(int i = 0; i < LENWRK; i++) {
-		fprintf(file, "%f ", WORK[i]);
+		fprintf(file, "%f, ", WORK[i]);
 	}
 	fprintf(file, "]\n");
 
