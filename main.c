@@ -88,7 +88,6 @@ int main(int argc, char* argv[]) {
 	--- PERFORM FORWARD TRANSFORM
 	*/
 	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
-	for(int i = 0;
 
 	/**
 	--- PERFORM BACKWARD TRANSFORM
