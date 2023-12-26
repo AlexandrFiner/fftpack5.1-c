@@ -3,18 +3,36 @@
 #include <math.h>
 #include "f2c.h"
 
-#define lensav(n) (2*n + (int)(log2(n)) + 6)
+extern int cfft1i_(integer *, real *, integer *, integer *);
+extern int cfft1b_(integer *, integer *, complex *, integer *
+					lenc, real *, integer *, real *, integer *,
+					integer *);
 
-int cfftmi_(int *n, float *wsave, int *lensav, int *ier);
+// Переименование структуры complex в вашем коде
 
 int main(int argc, char* argv[]) {
+    integer I, N, LENSAV, IER, LENWRK;
+    N = 1000;
+    LENSAV = 2013;
+    LENWRK = 2 * N;
 
-    int n = 2;          // Длина сигнала
-    float wsave = 0.1;  // Частота
-    int ier = 5;
-    int lensv = lensav(n);
+    float RR, RI;
 
-    cfftmi_(&n, &wsave, &lensv, &ier);
-    printf("Hello world %d\n", ier);
-    return EXIT_SUCCESS;
+    static real WSAVE[2013];
+	static real WORK[2013];
+
+    printf("Program cfft1i and related messages:\n");
+    cfft1i_(&N, WSAVE, &LENSAV, &IER);
+
+    RR = 20.0;
+    RI = 10.0;
+
+    complex C = {RR, RI};
+
+	int ONE = 1;
+	// cfft1b_(&N, &ONE, &C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
+	// for(int i = 0; i < 2013; i++)
+	//	printf("%f", WORK[i]);
+
+    return 0;
 }
