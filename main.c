@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "f2c.h"
+#include <time.h>
 
 extern int cfft1i_(integer *, real *, integer *, integer *);
 extern int cfft1b_(integer *, integer *, complex *, integer *
@@ -19,40 +20,86 @@ int main(int argc, char* argv[]) {
     LENSAV = 2013;
     LENWRK = 2 * N;
 
-    float RR, RI;
+    real RR, RI;
 
     static real WSAVE[2013];
 	static real WORK[2000];
 
-    printf("Program cfft1i and related messages:\n");
-    cfft1i_(&N, WSAVE, &LENSAV, &IER);
-
-
-    // double realPart = 2.0;
-    // double imagPart = 3.0;
-	// complex z = {20.0, 30.0};
-
-    RR = 20.0;
-    RI = 10.0;
+	srand(time(NULL));
 
 	static integer INC = 1;
 	complex C[1000];
-	for(int i = 0; i < 1000; i++) {
-		C[i].r = RR;
-		C[i].i = RI;
-	}
+
+	complex NEED = { RR, RI };
+	real diff = 0.0;
+
+	// Back-forward
+	/**
+	--- IDENTIFY TEST AND INITIALIZE FFT
+	*/
+	printf("Program cfft1i and related messages:\n");
+	cfft1i_(&N, WSAVE, &LENSAV, &IER);
+
+	/**
+	--- GENERATE TEST VECTOR FOR BACKWARD-FORWARD TEST
+	*/
+    RR = (float)rand() / RAND_MAX;
+    RI = (float)rand() / RAND_MAX;
+	NEED.r = RR;
+	NEED.i = RI;
+	for(int i = 0; i < N; i++) { C[i].r = RR; C[i].i = RI; }
+
+	/**
+	--- PERFORM BACKWARD TRANSFORM
+	*/
 	cfft1b_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
+
+	/**
+	--- PERFORM FORWARD TRANSFORM
+	*/
 	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
 
-	for(int i = 0; i < 2013; i++) {
-		printf("%f\n", WSAVE[i]);
+	/**
+	--- PRINT TEST RESULTS
+	*/
+	diff = 0.0;
+	for(int i = 0; i < N; i++) {
+		diff = max(diff, abs(C[i].r - NEED.r) + abs(C[i].i - NEED.i));
 	}
+	printf("CFFT1 BACKWARD-FORWARD MAX ERROR = %f\n", diff);
 
-	// for(int i = 0; i < N; i++) {
-	//	printf("%f", C[i].r);
-	//	printf("%f", C[i].i);
-	// }
+	// Forward-back
+	/**
+	--- IDENTIFY TEST AND INITIALIZE FFT
+	*/
+	printf("Program cfft1i and related messages:\n");
+	cfft1i_(&N, WSAVE, &LENSAV, &IER);
 
+	/**
+	GENERATE TEST VECTOR FOR FORWARD-BACKWARD TEST
+	*/
+    RR = (float)rand() / RAND_MAX;
+    RI = (float)rand() / RAND_MAX;
+	NEED.r = RR;
+	NEED.i = RI;
+	for(int i = 0; i < N; i++) { C[i].r = RR; C[i].i = RI; }
+
+	/**
+	--- PERFORM FORWARD TRANSFORM
+	*/
+	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
+
+	/**
+	--- PERFORM BACKWARD TRANSFORM
+	*/
+	cfft1b_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
+
+	/**
+	--- PRINT TEST RESULTS
+	*/
+	diff = 0.0;
+	for(int i = 0; i < N; i++) { diff = max(diff, abs(C[i].r - NEED.r) + abs(C[i].i - NEED.i)); }
+	printf("CFFT1 FORWARD-BACKWARD MAX ERROR = %f\n", diff);
 
     return 0;
 }
