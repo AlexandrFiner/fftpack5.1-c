@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     fprintf(file, "IDENTIFY TEST AND INITIALIZE FFT\n");
     fprintf(file, "WSAVE = [");
 	for(int i = 0; i < LENSAV; i++) {
-		fprintf(file, "%f ", WSAVE[i]);
+		fprintf(file, "%f, ", WSAVE[i]);
 	}
 	fprintf(file, "]\n");
 
