@@ -15,6 +15,14 @@ extern int cfft1f_(integer *, integer *, complex *, integer *,
 // Переименование структуры complex в вашем коде
 
 int main(int argc, char* argv[]) {
+	FILE *file = fopen("result.txt", "w");
+
+    // Проверить, был ли файл успешно открыт
+    if (file == NULL) {
+        fprintf(stderr, "Ошибка открытия файла.\n");
+        return 1;  // Вернуть код ошибки
+    }
+
     integer I, N, LENSAV, IER, LENWRK;
     N = 1000;
     LENSAV = 2013;
@@ -40,6 +48,14 @@ int main(int argc, char* argv[]) {
 	printf("Program cfft1i and related messages:\n");
 	cfft1i_(&N, WSAVE, &LENSAV, &IER);
 
+    fprintf(file, "Back-forward\n");
+    fprintf(file, "IDENTIFY TEST AND INITIALIZE FFT\n");
+    fprintf(file, "WSAVE = [");
+	for(int i = 0; i < LENSAV; i++) {
+		fprintf(file, "%f ", WSAVE[i]);
+	}
+	fprintf(file, "]\n");
+
 	/**
 	--- GENERATE TEST VECTOR FOR BACKWARD-FORWARD TEST
 	*/
@@ -47,17 +63,28 @@ int main(int argc, char* argv[]) {
     RI = (float)rand() / RAND_MAX;
 	NEED.r = RR;
 	NEED.i = RI;
+	fprintf(file, "RR - %f, RI - %f\n", RR, RI);
 	for(int i = 0; i < N; i++) { C[i].r = RR; C[i].i = RI; }
 
 	/**
 	--- PERFORM BACKWARD TRANSFORM
 	*/
 	cfft1b_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
+    fprintf(file, "BACKWARD WORK = [");
+	for(int i = 0; i < LENWRK; i++) {
+		fprintf(file, "%f ", WORK[i]);
+	}
+	fprintf(file, "]\n");
 
 	/**
 	--- PERFORM FORWARD TRANSFORM
 	*/
 	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
+    fprintf(file, "FORWARD WORK = [");
+	for(int i = 0; i < LENWRK; i++) {
+		fprintf(file, "%f ", WORK[i]);
+	}
+	fprintf(file, "]\n");
 
 	/**
 	--- PRINT TEST RESULTS
@@ -68,12 +95,22 @@ int main(int argc, char* argv[]) {
 	}
 	printf("CFFT1 BACKWARD-FORWARD MAX ERROR = %f\n", diff);
 
+	fprintf(file, "\n");
+
 	// Forward-back
 	/**
 	--- IDENTIFY TEST AND INITIALIZE FFT
 	*/
 	printf("Program cfft1i and related messages:\n");
 	cfft1i_(&N, WSAVE, &LENSAV, &IER);
+
+    fprintf(file, "Forward-back\n");
+    fprintf(file, "IDENTIFY TEST AND INITIALIZE FFT\n");
+    fprintf(file, "WSAVE = [");
+	for(int i = 0; i < LENSAV; i++) {
+		fprintf(file, "%f ", WSAVE[i]);
+	}
+	fprintf(file, "]\n");
 
 	/**
 	GENERATE TEST VECTOR FOR FORWARD-BACKWARD TEST
@@ -82,17 +119,28 @@ int main(int argc, char* argv[]) {
     RI = (float)rand() / RAND_MAX;
 	NEED.r = RR;
 	NEED.i = RI;
+	fprintf(file, "RR - %f, RI - %f\n", RR, RI);
 	for(int i = 0; i < N; i++) { C[i].r = RR; C[i].i = RI; }
 
 	/**
 	--- PERFORM FORWARD TRANSFORM
 	*/
 	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
+    fprintf(file, "FORWARD WORK = [");
+	for(int i = 0; i < LENWRK; i++) {
+		fprintf(file, "%f ", WORK[i]);
+	}
+	fprintf(file, "]\n");
 
 	/**
 	--- PERFORM BACKWARD TRANSFORM
 	*/
 	cfft1b_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
+    fprintf(file, "BACKWARD WORK = [");
+	for(int i = 0; i < LENWRK; i++) {
+		fprintf(file, "%f ", WORK[i]);
+	}
+	fprintf(file, "]\n");
 
 	/**
 	--- PRINT TEST RESULTS
@@ -101,5 +149,7 @@ int main(int argc, char* argv[]) {
 	for(int i = 0; i < N; i++) { diff = max(diff, abs(C[i].r - NEED.r) + abs(C[i].i - NEED.i)); }
 	printf("CFFT1 FORWARD-BACKWARD MAX ERROR = %f\n", diff);
 
+
+    fclose(file);
     return 0;
 }
