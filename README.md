@@ -12,4 +12,4 @@ gcc main.c -o test -lfftpack -L libs -I include -v
 ranlib libs/libfftpack.a
 
 gcc main.c -o test -lm -lfftpack -L libs -I include/
-gcc -o test main.c libfftpack.a -I include 
+gcc -o test main.c libfftpack.a -I include -g && ./test  
