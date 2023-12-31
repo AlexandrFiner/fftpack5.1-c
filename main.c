@@ -49,11 +49,6 @@ int main(int argc, char* argv[]) {
 
     fprintf(file, "Back-forward\n");
     fprintf(file, "IDENTIFY TEST AND INITIALIZE FFT\n");
-    fprintf(file, "WSAVE = [");
-	for(int i = 1; i < LENSAV; i++) {
-		fprintf(file, "%f, ", WSAVE[i]);
-	}
-	fprintf(file, "]\n");
 
 	/**
 	--- GENERATE TEST VECTOR FOR BACKWARD-FORWARD TEST
@@ -66,6 +61,11 @@ int main(int argc, char* argv[]) {
 		NEED[i].r = RR;
 		NEED[i].i = RI;
 	}
+    fprintf(file, "C = [");
+	for(int i = 1; i < N; i++) {
+		fprintf(file, "%f+%fj ", C[i].r, C[i].i);
+	}
+	fprintf(file, "]\n");
 
 	/**
 	--- PERFORM BACKWARD TRANSFORM
@@ -105,11 +105,6 @@ int main(int argc, char* argv[]) {
 
     fprintf(file, "Forward-back\n");
     fprintf(file, "IDENTIFY TEST AND INITIALIZE FFT\n");
-    fprintf(file, "WSAVE = [");
-	for(int i = 1; i < LENSAV; i++) {
-		fprintf(file, "%f, ", WSAVE[i]);
-	}
-	fprintf(file, "]\n");
 
 	/**
 	GENERATE TEST VECTOR FOR FORWARD-BACKWARD TEST
@@ -122,6 +117,11 @@ int main(int argc, char* argv[]) {
 		NEED[i].r = RR;
 		NEED[i].i = RI;
 	}
+    fprintf(file, "C = [");
+	for(int i = 1; i < N; i++) {
+		fprintf(file, "%f+%fj ", C[i].r, C[i].i);
+	}
+	fprintf(file, "]\n");
 
 	/**
 	--- PERFORM FORWARD TRANSFORM
