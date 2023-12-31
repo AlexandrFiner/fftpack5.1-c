@@ -37,8 +37,7 @@ int main(int argc, char* argv[]) {
 
 	static integer INC = 1;
 	complex C[1000];
-
-	complex NEED = { RR, RI };
+	complex NEED[1000];
 	real diff = 0.0;
 
 	// Back-forward
@@ -59,12 +58,14 @@ int main(int argc, char* argv[]) {
 	/**
 	--- GENERATE TEST VECTOR FOR BACKWARD-FORWARD TEST
 	*/
-    RR = (float)rand() / RAND_MAX;
-    RI = (float)rand() / RAND_MAX;
-	NEED.r = RR;
-	NEED.i = RI;
-	fprintf(file, "RR - %f, RI - %f\n", RR, RI);
-	for(int i = 1; i < N; i++) { C[i].r = RR; C[i].i = RI; }
+	for(int i = 1; i < N; i++) {
+		RR = (float)rand() / RAND_MAX;
+		RI = (float)rand() / RAND_MAX;
+		C[i].r = RR;
+		C[i].i = RI;
+		NEED[i].r = RR;
+		NEED[i].i = RI;
+	}
 
 	/**
 	--- PERFORM BACKWARD TRANSFORM
@@ -90,9 +91,7 @@ int main(int argc, char* argv[]) {
 	--- PRINT TEST RESULTS
 	*/
 	diff = 0.0;
-	for(int i = 1; i < N; i++) {
-		diff = max(diff, abs(C[i].r - NEED.r) + abs(C[i].i - NEED.i));
-	}
+	for(int i = 1; i < N; i++) { diff = max(diff, abs(C[i].r - NEED[i].r) + abs(C[i].i - NEED[i].i)); }
 	printf("CFFT1 BACKWARD-FORWARD MAX ERROR = %f\n", diff);
 
 	fprintf(file, "\n");
@@ -115,12 +114,14 @@ int main(int argc, char* argv[]) {
 	/**
 	GENERATE TEST VECTOR FOR FORWARD-BACKWARD TEST
 	*/
-    RR = (float)rand() / RAND_MAX;
-    RI = (float)rand() / RAND_MAX;
-	NEED.r = RR;
-	NEED.i = RI;
-	fprintf(file, "RR - %f, RI - %f\n", RR, RI);
-	for(int i = 1; i < N; i++) { C[i].r = RR; C[i].i = RI; }
+	for(int i = 1; i < N; i++) {
+		RR = (float)rand() / RAND_MAX;
+		RI = (float)rand() / RAND_MAX;
+		C[i].r = RR;
+		C[i].i = RI;
+		NEED[i].r = RR;
+		NEED[i].i = RI;
+	}
 
 	/**
 	--- PERFORM FORWARD TRANSFORM
@@ -146,7 +147,7 @@ int main(int argc, char* argv[]) {
 	--- PRINT TEST RESULTS
 	*/
 	diff = 0.0;
-	for(int i = 1; i < N; i++) { diff = max(diff, abs(C[i].r - NEED.r) + abs(C[i].i - NEED.i)); }
+	for(int i = 1; i < N; i++) { diff = max(diff, abs(C[i].r - NEED[i].r) + abs(C[i].i - NEED[i].i)); }
 	printf("CFFT1 FORWARD-BACKWARD MAX ERROR = %f\n", diff);
 
 

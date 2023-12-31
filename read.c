@@ -1,48 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+
+// Function to read float array from a binary file
+float* readFloatArray(FILE *file, size_t *size) {
+    fread(size, sizeof(size_t), 1, file);  // Read the size of the array
+    float *floatArray = (float *)malloc(sizeof(float) * (*size));
+    fread(floatArray, sizeof(float), *size, file);  // Read the array data
+    return floatArray;
+}
 
 int main() {
     // Specify the file path
     const char *file_path = "float_data.bin";
 
-    // Open the file in binary read mode
+    // Read binary data from file
     FILE *file = fopen(file_path, "rb");
-    if (file == NULL) {
-        perror("Error opening file");
-        return 1;
-    }
-
-    // Determine the size of the file
-    fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
-    rewind(file);
-
-    // Allocate memory to store the binary data
-    uint8_t *binary_data = (uint8_t *)malloc(file_size);
-    if (binary_data == NULL) {
-        perror("Memory allocation error");
+    if (file != NULL) {
+        size_t size1, size2;
+        float *readArray1 = readFloatArray(file, &size1);
+        float *readArray2 = readFloatArray(file, &size2);
         fclose(file);
+
+        // Print the resulting arrays of floats
+        printf("Array 1:\n");
+        for (size_t i = 0; i < size1; i++) {
+            printf("%f ", readArray1[i]);
+        }
+        printf("\n");
+
+        printf("Array 2:\n");
+        for (size_t i = 0; i < size2; i++) {
+            printf("%f ", readArray2[i]);
+        }
+        printf("\n");
+
+        // Free allocated memory
+        free(readArray1);
+        free(readArray2);
+
+    } else {
+        printf("Error opening file for reading.\n");
         return 1;
     }
-
-    // Read the binary data from the file
-    fread(binary_data, 1, file_size, file);
-    fclose(file);
-
-    // Determine the number of floats in the binary data
-    size_t num_floats = file_size / sizeof(float);
-
-    // Unpack binary data into floats
-    float *float_array = (float *)binary_data;
-
-    // Print the resulting array of floats
-    for (size_t i = 0; i < num_floats; ++i) {
-        printf("%.2f\n", float_array[i]);
-    }
-
-    // Free allocated memory
-    free(binary_data);
 
     return 0;
 }
