@@ -24,14 +24,15 @@ int main(int argc, char* argv[]) {
     }
 
     integer I, N, LENSAV, IER, LENWRK;
-    N = 1000;
-    LENSAV = 2013;
+    N = 5;
+    LENSAV = 2 * N + (int)(log2((double)N)) + 4;
     LENWRK = 2 * N;
 
     real RR, RI;
 
-    static real WSAVE[2013];
-	static real WORK[2000];
+
+    real *WSAVE = (real *)malloc(LENSAV * sizeof(real));
+    real *WORK = (real *)malloc(LENWRK * sizeof(real));
 
 	srand(time(NULL));
 
@@ -46,6 +47,13 @@ int main(int argc, char* argv[]) {
 	*/
 	printf("Program cfft1i and related messages:\n");
 	cfft1i_(&N, WSAVE, &LENSAV, &IER);
+    fprintf(file, "WSAVE = [");
+	for(int i = 0; i < LENSAV; i++) {
+		fprintf(file, "%f ", WSAVE[i]);
+	}
+	WSAVE[5] = 1.0;
+	fprintf(file, "]\n");
+
 
     fprintf(file, "Back-forward\n");
     fprintf(file, "IDENTIFY TEST AND INITIALIZE FFT\n");
@@ -53,17 +61,18 @@ int main(int argc, char* argv[]) {
 	/**
 	--- GENERATE TEST VECTOR FOR BACKWARD-FORWARD TEST
 	*/
-	for(int i = 1; i < N; i++) {
+	for(int i = 0; i < N; i++) {
 		RR = (float)rand() / RAND_MAX;
-		RI = (float)rand() / RAND_MAX;
+		RI = 0.0;
 		C[i].r = RR;
 		C[i].i = RI;
 		NEED[i].r = RR;
 		NEED[i].i = RI;
 	}
-    fprintf(file, "C = [");
-	for(int i = 1; i < N; i++) {
-		fprintf(file, "%f+%fj ", C[i].r, C[i].i);
+
+    fprintf(file, "Generated C = [");
+	for(int i = 0; i < N; i++) {
+		fprintf(file, "%f+%fj, ", C[i].r, C[i].i);
 	}
 	fprintf(file, "]\n");
 
@@ -71,9 +80,9 @@ int main(int argc, char* argv[]) {
 	--- PERFORM BACKWARD TRANSFORM
 	*/
 	cfft1b_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
-    fprintf(file, "BACKWARD WORK = [");
-	for(int i = 1; i < LENWRK; i++) {
-		fprintf(file, "%f, ", WORK[i]);
+    fprintf(file, "Backward C = [");
+	for(int i = 0; i < N; i++) {
+		fprintf(file, "%f+%fj, ", C[i].r, C[i].i);
 	}
 	fprintf(file, "]\n");
 
@@ -81,9 +90,9 @@ int main(int argc, char* argv[]) {
 	--- PERFORM FORWARD TRANSFORM
 	*/
 	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
-    fprintf(file, "FORWARD WORK = [");
-	for(int i = 1; i < LENWRK; i++) {
-		fprintf(file, "%f, ", WORK[i]);
+    fprintf(file, "Forward C = [");
+	for(int i = 0; i < N; i++) {
+		fprintf(file, "%f+%fj, ", C[i].r, C[i].i);
 	}
 	fprintf(file, "]\n");
 
@@ -91,8 +100,8 @@ int main(int argc, char* argv[]) {
 	--- PRINT TEST RESULTS
 	*/
 	diff = 0.0;
-	for(int i = 1; i < N; i++) { diff = max(diff, abs(C[i].r - NEED[i].r) + abs(C[i].i - NEED[i].i)); }
-	printf("CFFT1 BACKWARD-FORWARD MAX ERROR = %f\n", diff);
+	for(int i = 0; i < N; i++) { diff = max(diff, abs(C[i].r - NEED[i].r) + abs(C[i].i - NEED[i].i)); }
+	printf("CFFT1 BACKWARD-FORWARD MAX ERROR = %.20f\n", diff);
 
 	fprintf(file, "\n");
 
@@ -109,17 +118,17 @@ int main(int argc, char* argv[]) {
 	/**
 	GENERATE TEST VECTOR FOR FORWARD-BACKWARD TEST
 	*/
-	for(int i = 1; i < N; i++) {
+	for(int i = 0; i < N; i++) {
 		RR = (float)rand() / RAND_MAX;
-		RI = (float)rand() / RAND_MAX;
+		RI = 0.0;
 		C[i].r = RR;
 		C[i].i = RI;
 		NEED[i].r = RR;
 		NEED[i].i = RI;
 	}
-    fprintf(file, "C = [");
-	for(int i = 1; i < N; i++) {
-		fprintf(file, "%f+%fj ", C[i].r, C[i].i);
+    fprintf(file, "Generated C = [");
+	for(int i = 0; i < N; i++) {
+		fprintf(file, "%f+%fj, ", C[i].r, C[i].i);
 	}
 	fprintf(file, "]\n");
 
@@ -127,9 +136,9 @@ int main(int argc, char* argv[]) {
 	--- PERFORM FORWARD TRANSFORM
 	*/
 	cfft1f_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
-    fprintf(file, "FORWARD WORK = [");
-	for(int i = 1; i < LENWRK; i++) {
-		fprintf(file, "%f, ", WORK[i]);
+    fprintf(file, "Forward C = [");
+	for(int i = 0; i < N; i++) {
+		fprintf(file, "%f+%fj, ", C[i].r, C[i].i);
 	}
 	fprintf(file, "]\n");
 
@@ -137,9 +146,9 @@ int main(int argc, char* argv[]) {
 	--- PERFORM BACKWARD TRANSFORM
 	*/
 	cfft1b_(&N, &INC, C, &N, WSAVE, &LENSAV, WORK, &LENWRK, &IER);
-    fprintf(file, "BACKWARD WORK = [");
-	for(int i = 1; i < LENWRK; i++) {
-		fprintf(file, "%f ", WORK[i]);
+    fprintf(file, "Backward C = [");
+	for(int i = 0; i < N; i++) {
+		fprintf(file, "%f+%fj, ", C[i].r, C[i].i);
 	}
 	fprintf(file, "]\n");
 
@@ -147,8 +156,8 @@ int main(int argc, char* argv[]) {
 	--- PRINT TEST RESULTS
 	*/
 	diff = 0.0;
-	for(int i = 1; i < N; i++) { diff = max(diff, abs(C[i].r - NEED[i].r) + abs(C[i].i - NEED[i].i)); }
-	printf("CFFT1 FORWARD-BACKWARD MAX ERROR = %f\n", diff);
+	for(int i = 0; i < N; i++) { diff = max(diff, abs(C[i].r - NEED[i].r) + abs(C[i].i - NEED[i].i)); }
+	printf("CFFT1 FORWARD-BACKWARD MAX ERROR = %.20f\n", diff);
 
 
     fclose(file);
