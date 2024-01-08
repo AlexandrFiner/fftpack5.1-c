@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     }
 
     integer I, N, LENSAV, IER, LENWRK;
-    N = 100;
+    N = 10;
     LENSAV = 2 * N + (int)(log2((double)N)) + 4;
     LENWRK = 2 * N;
 
@@ -133,6 +133,7 @@ int main(int argc, char* argv[]) {
 		fprintf(file, "%f+%fj, ", C[i].r, C[i].i);
 	}
 	fprintf(file, "]\n");
+    fwrite(C, sizeof(complex), N, file_complex);
 
 	/**
 	--- PERFORM FORWARD TRANSFORM
@@ -143,6 +144,7 @@ int main(int argc, char* argv[]) {
 		fprintf(file, "%f+%fj, ", C[i].r, C[i].i);
 	}
 	fprintf(file, "]\n");
+    fwrite(C, sizeof(complex), N, file_complex);
 
 	/**
 	--- PERFORM BACKWARD TRANSFORM

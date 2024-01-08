@@ -10,22 +10,18 @@ class ComplexStruct:
 with open("complex_data_combined.bin", "rb") as file:
     data_combined = file.read()
 
-# Calculate the number of values in each array
-num_values_C = 10
-num_values_C2 = 10
+# Calculate the number of complex values
+num_values_total = len(data_combined) // struct.calcsize("ff")
 
-# Read C[100] array from the combined binary file
-complex_array_C = [ComplexStruct(*struct.unpack("dd", data_combined[i:i+16])) for i in range(0, num_values_C * 16, 16)]
+# Split the data into four equal parts
+part_size = num_values_total // 4
+data_parts = [data_combined[i:i+part_size*8] for i in range(0, len(data_combined), part_size*8)]
 
-# Read C2[10] array from the combined binary file
-complex_array_C2 = [ComplexStruct(*struct.unpack("dd", data_combined[i:i+16])) for i in range(num_values_C * 16, len(data_combined), 16)]
+# Process each part separately
+for part_num, part_data in enumerate(data_parts):
+    complex_array_part = [ComplexStruct(*struct.unpack("ff", part_data[i:i+8])) for i in range(0, len(part_data), 8)]
 
-# Print the results for C[100] array
-print("C[10] array:")
-for i, c in enumerate(complex_array_C):
-    print(f"Element {i + 1}: Real = {c.real}, Imaginary = {c.imag}")
-
-# Print the results for C2[10] array
-print("\nC2[10] array:")
-for i, c in enumerate(complex_array_C2):
-    print(f"Element {i + 1}: Real = {c.real}, Imaginary = {c.imag}")
+    # Print the results for each part
+    print(f"Part {part_num + 1}:")
+    for i, c in enumerate(complex_array_part):
+        print(f"Element {i + 1}: Real = {c.real}, Imaginary = {c.imag}")
