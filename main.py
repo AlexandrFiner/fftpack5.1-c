@@ -7,7 +7,7 @@ class TestFFT(unittest.TestCase):
 
     def test_forward_transform_real_input(self):
         # Test forward FFT for real input
-        input_data = np.array([0.727225+0.000000j, 0.471560+0.000000j, 0.502850+0.000000j, 0.400452+0.000000j, 0.392018+0.000000j])
+        input_data = np.array([0.730739+0.000000j, 0.532027+0.000000j, 0.769640+0.000000j, 0.334361+0.000000j, 0.604508+0.000000j, 0.959597+0.000000j, 0.950581+0.000000j, 0.414361+0.000000j, 0.165895+0.000000j, 0.193355+0.000000j])
         fft_result = fft(input_data)
         print(fft_result)
 

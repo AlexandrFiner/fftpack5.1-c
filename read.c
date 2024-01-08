@@ -1,47 +1,40 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-// Function to read float array from a binary file
-float* readFloatArray(FILE *file, size_t *size) {
-    fread(size, sizeof(size_t), 1, file);  // Read the size of the array
-    float *floatArray = (float *)malloc(sizeof(float) * (*size));
-    fread(floatArray, sizeof(float), *size, file);  // Read the array data
-    return floatArray;
-}
+// Define the complex type in C
+typedef struct {
+    double real;  // real part
+    double imag;  // imaginary part
+} Complex;
 
 int main() {
-    // Specify the file path
-    const char *file_path = "float_data.bin";
+    // Define and initialize C[100] array
+    Complex C[100];
+    for (int i = 0; i < 100; ++i) {
+        C[i].real = i * 0.1;  // Replace with your desired values
+        C[i].imag = i * 0.2;
+    }
 
-    // Read binary data from file
-    FILE *file = fopen(file_path, "rb");
-    if (file != NULL) {
-        size_t size1, size2;
-        float *readArray1 = readFloatArray(file, &size1);
-        float *readArray2 = readFloatArray(file, &size2);
-        fclose(file);
+    // Define and initialize C2[10] array
+    Complex C2[10];
+    for (int i = 0; i < 10; ++i) {
+        C2[i].real = 1.0;  // Replace with your desired values
+        C2[i].imag = 0.0;
+    }
 
-        // Print the resulting arrays of floats
-        printf("Array 1:\n");
-        for (size_t i = 0; i < size1; i++) {
-            printf("%f ", readArray1[i]);
-        }
-        printf("\n");
-
-        printf("Array 2:\n");
-        for (size_t i = 0; i < size2; i++) {
-            printf("%f ", readArray2[i]);
-        }
-        printf("\n");
-
-        // Free allocated memory
-        free(readArray1);
-        free(readArray2);
-
-    } else {
-        printf("Error opening file for reading.\n");
+    // Write both arrays to a single binary file
+    FILE *file = fopen("complex_data_combined.bin", "wb");
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file for writing\n");
         return 1;
     }
+
+    // Write C[100] array
+    fwrite(C, sizeof(Complex), 100, file);
+
+    // Write C2[10] array
+    fwrite(C2, sizeof(Complex), 10, file);
+
+    fclose(file);
 
     return 0;
 }
